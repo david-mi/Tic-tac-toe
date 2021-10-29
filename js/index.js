@@ -50,7 +50,7 @@ getData('morpion')
 	console.log('--------------------------------------- \n tabCircleIndex au chargement de la page')
 	console.log(tabCircleIndex)
 	console.log('---------------------------------------')
-	
+	checkWin()
 })
 }, 500)
 
