@@ -12,6 +12,7 @@ const getData = () =>{
 	return fetch('http://localhost:3000/morpion')
 }
 
+// on appelle getdata au chargement de la page pour afficher les éléments
 getData()
 .then(res => res.json())
 .then(data =>{
