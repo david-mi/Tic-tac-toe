@@ -140,6 +140,8 @@ const reset = () =>{
 	obj.increment = 0;
 	tabCrossIndex = [];
 	tabCircleIndex = [];
+	obj.crossindex = tabCrossIndex
+	obj.circleindex = tabCircleIndex
 	nB = 0;
 	updateData('morpion')
 	.then(data => {
