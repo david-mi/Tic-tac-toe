@@ -52,7 +52,6 @@ const addSymbol = item =>{
 		// on ajoute l'index de l'élément cliqué dans
 		// tabCrossIndex 
 	}else if (isEven(nB)){
-		nB++
 		obj.increment = nB
 		addIndex(tabCrossIndex, item)
 		obj.circleindex = tabCircleIndex
@@ -69,7 +68,6 @@ const addSymbol = item =>{
 		// on ajoute l'index de l'élément cliqué dans
 		// tabCircleIndex
 	}else{
-		nB++
 		obj.increment = nB
 		addIndex(tabCircleIndex, item)
 		obj.crossindex = tabCrossIndex
