@@ -25,8 +25,10 @@ getData('morpion')
 .then(res => res.json())
 .then(data =>{
 	console.log(data)
-	tabCrossIndex = data.crossindex
-	tabCircleIndex = data.circleindex 
+	tabCrossIndex = data.crossindex.filter(e => e !== '')
+	tabCircleIndex = data.circleindex .filter(e => e !== '')
+	console.log(tabCrossIndex)
+	console.log(tabCircleIndex)
 	tabCrossIndex.forEach(i => cases[i].classList.add('cross'))
 	tabCircleIndex.forEach(i => cases[i].classList.add('circle'))
 	
