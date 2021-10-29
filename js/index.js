@@ -7,6 +7,14 @@ const cases = document.querySelectorAll('.case')
 let nB = 0;
 let tabCircleIndex = [];
 let tabCrossIndex = [];
+// let obj = {
+// 	name: 'morpion',
+// 	increment: '',
+// 	crossindex: [],
+// 	circleindex: []
+// }
+
+let obj = ''
 
 let api = 'http://localhost:3000/'
 const distApi = 'https://morpion-david-mi.herokuapp.com/'
@@ -24,13 +32,23 @@ const getData = (endpoint) =>{
 getData('morpion')
 .then(res => res.json())
 .then(data =>{
-	console.log(data)
-	tabCrossIndex = data.crossindex.filter(e => e !== '')
-	tabCircleIndex = data.circleindex .filter(e => e !== '')
+	obj = data
+	delete obj._id
+	delete obj.__v
+	console.log(obj)
+	data.circleindex.forEach(i => {
+		cases[i].classList.add('circle')
+		tabCircleIndex.push(i)
+	})
+	data.crossindex.forEach(i => {
+		cases[i].classList.add('cross')
+		tabCrossIndex.push(i)
+	})
+	console.log('--------------------------------------- \n tabCrossIndex au chargement de la page')
 	console.log(tabCrossIndex)
+	console.log('--------------------------------------- \n tabCircleIndex au chargement de la page')
 	console.log(tabCircleIndex)
-	tabCrossIndex.forEach(i => cases[i].classList.add('cross'))
-	tabCircleIndex.forEach(i => cases[i].classList.add('circle'))
+	console.log('---------------------------------------')
 	
 })
 
@@ -53,9 +71,7 @@ const addSymbol = item =>{
 		// tabCrossIndex 
 	}else if (isEven(nB)){
 		obj.increment = nB
-		addIndex(tabCrossIndex, item)
-		obj.circleindex = tabCircleIndex
-		console.log(obj)
+		addIndexCross(item)
 		updateData('morpion')
 		.then(data => {
 			console.log(data)
@@ -69,23 +85,18 @@ const addSymbol = item =>{
 		// tabCircleIndex
 	}else{
 		obj.increment = nB
-		addIndex(tabCircleIndex, item)
-		obj.crossindex = tabCrossIndex
-		console.log(nB)
+		addIndexCircle(item)
 		updateData('morpion')
 		.then(data => {
-		console.log(data)
 		classAdd(item,'circle')
 		})
 	}
+	console.log('valeur de obj après le isEven')
+	console.log(obj)
+	console.log('---------------------------------------')
 }
 
-let obj = {
-	name: 'morpion',
-	increment: '',
-	crossindex: '',
-	circleindex: ''
-}
+
 
 const updateData = (endpoint) => {
 		return fetch(`${api}${endpoint}`,{
@@ -111,9 +122,11 @@ container.addEventListener('click', (e) => {
 		.then(res => res.json())
 		.then(res => {
 			nB = res.increment;
-			console.log(`Valeur de nB au get: ${nB}`)
+			console.log(`Valeur de nB au get: ${nB} \n ---------------------------------------`)
 			addSymbol(elem)
 			checkWin()
+			console.log(tabCrossIndex)
+			console.log(tabCircleIndex)
 
 		})
 
@@ -142,8 +155,9 @@ const reset = () =>{
 	tabCircleIndex = [];
 	obj.crossindex = tabCrossIndex
 	obj.circleindex = tabCircleIndex
+	console.log(obj)
 	nB = 0;
-	updateData('morpion')
+	updateData('morpion/reset')
 	.then(data => {
 		console.log(`Increment reseted => ${data.increment}`)
 		cases.forEach(elem => deleteAllClass(elem));
@@ -171,8 +185,15 @@ const winCases = [
 // fonction pour ajouter l'id l'élément cliqué
 // convertie en nombre dans un tableau, qui correspond à l'index 
 // de l'élément par rapport à son parent
-const addIndex = (tab, item) =>{
-	tab.push(parseInt(item.id))
+const addIndexCircle = (item) =>{
+	tabCircleIndex.push(parseInt(item.id))
+	obj.circleindex = tabCircleIndex
+	
+}
+
+const addIndexCross = (item) =>{
+	tabCrossIndex.push(parseInt(item.id))
+	obj.crossindex = tabCrossIndex
 }
 
 // fonction qui va checker si un des tableaux de Wincases
@@ -187,8 +208,6 @@ innerText = (text) => title.innerText = text
 // fonction qui va check si quelqu'un à gagné
 const checkWin = () =>{
 	winCases.forEach(elem => {
-		console.log(tabCrossIndex)
-		console.log(tabCircleIndex)
 		let crossWin = results(elem, tabCrossIndex);
 		let circleWin = results(elem, tabCircleIndex);
 			if (crossWin){
