@@ -8,6 +8,14 @@ let nB = 0;
 let tabCircleIndex = [];
 let tabCrossIndex = [];
 
+let api = 'http://localhost:3000/'
+const distApi = 'https://morpion-david-mi.herokuapp.com/'
+
+if(window.location.origin !== api){
+	api = distApi
+	console.log('Pas en local')
+}
+
 const getData = () =>{
 	return fetch('http://localhost:3000/morpion')
 }
