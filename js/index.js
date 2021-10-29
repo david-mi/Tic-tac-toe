@@ -29,6 +29,7 @@ const getData = (endpoint) =>{
 }
 
 // on appelle getdata au chargement de la page pour afficher les éléments
+setInterval(()=>{
 getData('morpion')
 .then(res => res.json())
 .then(data =>{
@@ -51,6 +52,8 @@ getData('morpion')
 	console.log('---------------------------------------')
 	
 })
+}, 500)
+
 
 
 
