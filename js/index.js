@@ -8,6 +8,23 @@ let nB = 0;
 let tabCircleIndex = [];
 let tabCrossIndex = [];
 
+const getData = () =>{
+	return fetch('http://localhost:3000/morpion')
+}
+
+getData()
+.then(res => res.json())
+.then(data =>{
+	console.log(data)
+	tabCrossIndex = data.crossindex
+	tabCircleIndex = data.circleindex 
+	tabCrossIndex.forEach(i => cases[i].classList.add('cross'))
+	tabCircleIndex.forEach(i => cases[i].classList.add('circle'))
+	
+})
+
+
+
 // fonction qui va vérifier si une classe est présente
 // et va incrémenter ou non nB
 const addSymbol = item =>{
@@ -25,8 +42,16 @@ const addSymbol = item =>{
 		// tabCrossIndex 
 	}else if (isEven(nB)){
 		nB++
-		classAdd(item,'cross')
+		obj.increment = nB
 		addIndex(tabCrossIndex, item)
+		obj.circleindex = tabCircleIndex
+		console.log(obj)
+		updateData()
+		.then(data => {
+			console.log(data)
+		classAdd(item,'cross')
+		})
+		
 		
 		// si nB est impair, on ajoute la classe
 		// circle sur l'élément, on incrémente nB
@@ -34,11 +59,35 @@ const addSymbol = item =>{
 		// tabCircleIndex
 	}else{
 		nB++
-		classAdd(item,'circle')
+		obj.increment = nB
 		addIndex(tabCircleIndex, item)
+		obj.crossindex = tabCrossIndex
+		console.log(nB)
+		updateData()
+		.then(data => {
+		console.log(data)
+		classAdd(item,'circle')
+		})
 	}
-	
 }
+
+let obj = {
+	name: 'morpion',
+	increment: '',
+	crossindex: '',
+	circleindex: ''
+}
+
+const updateData = () => {
+		return fetch('http://localhost:3000/morpion',{
+		method: 'PUT',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify(obj)
+	})
+	.then(res => res.json())
+}
+
+
 
 // fonction pour savoir si un nombre est pair
 const isEven = nb => nb % 2 === 0;
@@ -49,8 +98,16 @@ const classAdd = (item, classe) => item.classList.add(classe);
 container.addEventListener('click', (e) => {
 	let elem = e.target.closest('.case');
 	if (elem){
-		addSymbol(elem)
-		checkWin()
+		getData()
+		.then(res => res.json())
+		.then(res => {
+			nB = res.increment;
+			console.log(`Valeur de nB au get: ${nB}`)
+			addSymbol(elem)
+			checkWin()
+
+		})
+
 	}
 })
 
@@ -71,10 +128,16 @@ const deleteAllClass = item => item.classList.remove(...allClasses);
 // on itère à travers les cases et on supprime
 // toutes les classes cross et circle
 const reset = () =>{
+	obj.increment = 0;
 	tabCrossIndex = [];
 	tabCircleIndex = [];
 	nB = 0;
-	cases.forEach(elem => deleteAllClass(elem));
+	updateData()
+	.then(data => {
+		console.log(`Increment reseted => ${data.increment}`)
+		cases.forEach(elem => deleteAllClass(elem));
+	})
+
 }
 
 // bouton pour appeler la fonction reset 
@@ -113,6 +176,8 @@ innerText = (text) => title.innerText = text
 // fonction qui va check si quelqu'un à gagné
 const checkWin = () =>{
 	winCases.forEach(elem => {
+		console.log(tabCrossIndex)
+		console.log(tabCircleIndex)
 		let crossWin = results(elem, tabCrossIndex);
 		let circleWin = results(elem, tabCircleIndex);
 			if (crossWin){
@@ -136,3 +201,13 @@ const checkWin = () =>{
 			}
 		})
 }
+
+// const postData = () => {
+// 	fetch('http://localhost:3000/send',{
+// 	method: 'POST',
+// 	headers: {'Content-Type': 'application/json'},
+// 	body: JSON.stringify(obj)
+// })
+// .then(res => res.json())
+// .then(res => console.log(res))
+// }
