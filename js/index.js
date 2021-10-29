@@ -16,12 +16,12 @@ if(window.location.origin !== 'http://127.0.0.1:5500'){
 	console.log('Pas en local')
 }
 
-const getData = () =>{
-	return fetch('http://localhost:3000/morpion')
+const getData = (endpoint) =>{
+	return fetch(`${api}${endpoint}`)
 }
 
 // on appelle getdata au chargement de la page pour afficher les éléments
-getData()
+getData('morpion')
 .then(res => res.json())
 .then(data =>{
 	console.log(data)
@@ -55,7 +55,7 @@ const addSymbol = item =>{
 		addIndex(tabCrossIndex, item)
 		obj.circleindex = tabCircleIndex
 		console.log(obj)
-		updateData()
+		updateData('morpion')
 		.then(data => {
 			console.log(data)
 		classAdd(item,'cross')
@@ -72,7 +72,7 @@ const addSymbol = item =>{
 		addIndex(tabCircleIndex, item)
 		obj.crossindex = tabCrossIndex
 		console.log(nB)
-		updateData()
+		updateData('morpion')
 		.then(data => {
 		console.log(data)
 		classAdd(item,'circle')
@@ -87,8 +87,8 @@ let obj = {
 	circleindex: ''
 }
 
-const updateData = () => {
-		return fetch('http://localhost:3000/morpion',{
+const updateData = (endpoint) => {
+		return fetch(`${api}${endpoint}`,{
 		method: 'PUT',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify(obj)
@@ -107,7 +107,7 @@ const classAdd = (item, classe) => item.classList.add(classe);
 container.addEventListener('click', (e) => {
 	let elem = e.target.closest('.case');
 	if (elem){
-		getData()
+		getData('morpion')
 		.then(res => res.json())
 		.then(res => {
 			nB = res.increment;
@@ -141,7 +141,7 @@ const reset = () =>{
 	tabCrossIndex = [];
 	tabCircleIndex = [];
 	nB = 0;
-	updateData()
+	updateData('morpion')
 	.then(data => {
 		console.log(`Increment reseted => ${data.increment}`)
 		cases.forEach(elem => deleteAllClass(elem));
