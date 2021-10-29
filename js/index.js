@@ -11,7 +11,7 @@ let tabCrossIndex = [];
 let api = 'http://localhost:3000/'
 const distApi = 'https://morpion-david-mi.herokuapp.com/'
 
-if(window.location.origin !== api){
+if(window.location.origin !== 'http://127.0.0.1:5500'){
 	api = distApi
 	console.log('Pas en local')
 }
